@@ -1,11 +1,13 @@
 #include "Nave.h"
 #include "Config.h"
-Nave::Nave(SDL_Surface*screen, char*rutaImagen, int x, int y, int module, int tipoNave)
+#include <stdlib.h>
+
+Nave::Nave(OpenGlImplement* openGlImplement, char*rutaImagen, int x, int y, int tipoNave)
 {
-	nave = new Objeto(screen, rutaImagen, x, y, module);
+	nave = new Sprite(openGlImplement, rutaImagen, x, y);
 	for (int i = 0; i < MAXIMO_DE_BALAS; i++)
 	{
-		bala[i] = new Objeto(screen, "balas.bmp", 0, 0, MODULO_BALAS_BALA);
+		bala[i] = new Sprite(openGlImplement, "Balas", 0, 0);
 		bala[i]->SetVisible(false);
 	}
 	balaVisible = 0;
@@ -55,10 +57,10 @@ void Nave::Disparar(int balas)
 void Nave::Pintar()
 {
 	if (visible){
-		nave->Pintar();
+		nave->Draw();
 		for (int i = 0; i < MAXIMO_DE_BALAS; i++)
 		{
-			bala[i]->Pintar();
+			bala[i]->Draw();
 			switch (tipoNave)
 			{
 			case NAVE_PROPIA:
@@ -89,7 +91,7 @@ void Nave::MoverIzquierda(int velocidad)
 {
 	nave->MoverLados(-velocidad);
 }
-Objeto*Nave::GetNaveObjeto()
+Sprite*Nave::GetNaveObjeto()
 {
 	return nave;
 }

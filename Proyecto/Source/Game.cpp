@@ -13,43 +13,60 @@ CGame::CGame(){
 
 void CGame::IniciandoVideo()
 {
-	
-	if (SDL_Init(SDL_INIT_VIDEO)){
-		printf("Error %s ", SDL_GetError());
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	
-	screenBuffer = SDL_SetVideoMode(WIDTH_SCREEN, HEIGHT_SCREEN, 24, SDL_HWSURFACE);
-	
-	if (screenBuffer == NULL){
-		printf("Error %s ", SDL_GetError());
-		exit(EXIT_FAILURE);
+	window = SDL_CreateWindow("TITULO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH_SCREEN, HEIGHT_SCREEN, SDL_WINDOW_OPENGL);
+
+	if (!window) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create OpenGL window: %s\n", SDL_GetError());
+		SDL_Quit();
+		exit(2);
 	}
-	SDL_WM_SetCaption("TITULO", NULL);
+	
+	gContext = SDL_GL_CreateContext(window);
+
+	if (!gContext) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create OpenGL context: %s\n", SDL_GetError());
+		SDL_Quit();
+		exit(2);
+	}
+	openGlImplement.setSDLWindow(window);
 }
 
 void CGame::CargandoObjetos()
 {
-	nave = new Nave(screenBuffer, "minave.bmp", (WIDTH_SCREEN / 2), (HEIGHT_SCREEN - 80), MODULO_MINAVE_NAVE, NAVE_PROPIA);
-	menuFondo = new Objeto(screenBuffer, "Menu.bmp", 0, 0, MODULO_MENU_FONDO);
-	textosObjeto = new Objeto(screenBuffer, "Titulos.bmp", 0, 0, -1);
-	jugandoFondo = new Objeto(screenBuffer, "Jugando.bmp", 0, 0, 1);
-	ganasteFondo = new Objeto(screenBuffer, "Ganaste.bmp", 0, 0, 1);
-	perdisteFondo = new Objeto(screenBuffer, "Perdiste.bmp", 0, 0, 1);
+	menuFondo = new Sprite(&openGlImplement, "Menu", 0, 0);
+	textoTitulo = new Sprite(&openGlImplement, "Texto_Titulo", 0, 0);
+	textoNombre = new Sprite(&openGlImplement, "Texto_Nombre", 0, 0);
+	textoOpcion1 = new Sprite(&openGlImplement, "Texto_Opcion1", 0, 0);
+	textoOpcion2 = new Sprite(&openGlImplement, "Texto_Opcion2", 0, 0);
+	textoOpcion1Sel = new Sprite(&openGlImplement, "Texto_Opcion1Sel", 0, 0);
+	textoOpcion2Sel = new Sprite(&openGlImplement, "Texto_Opcion2Sel", 0, 0);
+	nave = new Nave(&openGlImplement, "MiNave", (WIDTH_SCREEN / 2), (HEIGHT_SCREEN - 80), NAVE_PROPIA);
+	jugandoFondo = new Sprite(&openGlImplement, "Jugando", 0, 0);
+	ganasteFondo = new Sprite(&openGlImplement, "Ganaste", 0, 0);
+	perdisteFondo = new Sprite(&openGlImplement, "Perdiste", 0, 0);
 
 	for (int i = 0; i < MAXIMO_DE_ENEMIGOS; i++)
 	{
-		enemigoArreglo[i] = new Nave(screenBuffer, "enemigo.bmp", i * 2, 0, 2, NAVE_ENEMIGA);
+		enemigoArreglo[i] = new Nave(&openGlImplement, "Enemigo", i * 2, 0, NAVE_ENEMIGA);
 		enemigoArreglo[i]->GetNaveObjeto()->SetAutoMovimiento(false);
 		enemigoArreglo[i]->GetNaveObjeto()->SetPasoLimite(4);
 	}
 
-	opcionSeleccionada = MODULO_TEXTO_MENU_OPCION1;
+	opcionSeleccionada = MENU_OPCION1;
 }
 // Con esta función eliminaremos todos los elementos en pantalla
 void CGame::Finalize(){
 	delete(nave);
-	SDL_FreeSurface(screenBuffer);
+	
 	SDL_Quit();
 }
 
@@ -59,11 +76,14 @@ bool CGame::Start()
 	int salirJuego = false;
 
 	while (salirJuego == false){
-		keys = SDL_GetKeyState(NULL);
+		openGlImplement.DrawStart();
+		keys = (Uint8*)SDL_GetKeyboardState(NULL);
 		//Maquina de estados
-		switch (estadoJuego){///ACT2: Mal,, te faltaron 2 estados mas.
+		switch (estadoJuego){
 		case Estado::ESTADO_INICIANDO:
 			IniciandoVideo();
+			openGlImplement.InitGL();
+			openGlImplement.InitShaders();
 			CargandoObjetos();
 			InicializandoStage();
 			estadoJuego = Estado::ESTADO_MENU;
@@ -88,6 +108,9 @@ bool CGame::Start()
 		case Estado::ESTADO_FINALIZANDO:
 			estadoJuego = Estado::ESTADO_ESPERANDO;
 			salirJuego = false;
+			openGlImplement.QuitShaders();
+			SDL_Quit();
+
 			break;
 		case Estado::ESTADO_TERMINANDO:
 			TerminadoPintar();
@@ -99,14 +122,13 @@ bool CGame::Start()
 			break;
 		};
 
+		openGlImplement.DrawEnd();
+
 		while (SDL_PollEvent(&event))//Aqui sdl creara una lista de eventos ocurridos
 		{
 			if (event.type == SDL_QUIT) { salirJuego = true; } //si se detecta una salida del sdl o.....
 			if (event.type == SDL_KEYDOWN) {}
 		}
-
-		//Este codigo estara provicionalmente aqui.
-		SDL_Flip(screenBuffer);
 
 		//Calculando fps
 		tiempoFrameFinal = SDL_GetTicks();
@@ -119,11 +141,12 @@ bool CGame::Start()
 		tiempoFrameInicial = tiempoFrameFinal;
 		tick++;
 
+
 	}
 	return true;
 }
 
-bool CGame::LimitePantalla(Objeto*objeto, int bandera)
+bool CGame::LimitePantalla(Sprite*objeto, int bandera)
 {
 	if (bandera & BORDE_IZQUIERDO)
 		if (objeto->GetX() <= 0)
@@ -177,7 +200,7 @@ void CGame::MoverEnemigo(){
 }//Termina MoverEnemigo
 
 void CGame::JugandoPintar(){
-	jugandoFondo->Pintar();
+	jugandoFondo->Draw();
 	////////////////////////////////////////
 	//////// CONTROL DE COLISIONES /////////
 	for (int i = 0; i < nivel[nivelActual].Enemigos_VisiblesAlMismoTiempo; i++)
@@ -216,7 +239,7 @@ void CGame::JugandoPintar(){
 }
 
 void CGame::JugandoActualizar(){
-	keys = SDL_GetKeyState(NULL);
+	keys = (Uint8 *)SDL_GetKeyboardState(NULL);
 
 	for (int i = 0; i < nivel[nivelActual].Enemigos_VisiblesAlMismoTiempo; i++)
 	{
@@ -224,88 +247,91 @@ void CGame::JugandoActualizar(){
 	}
 	MoverEnemigo();
 
-	if (keys[SDLK_UP])
+	if (keys[SDL_SCANCODE_UP])
 	{
 		if (!LimitePantalla(nave->GetNaveObjeto(), BORDE_SUPERIOR))
 			nave->MoverArriba(nivel[nivelActual].Nave_Velocidad);
 	}
-	if (keys[SDLK_DOWN])
+	if (keys[SDL_SCANCODE_DOWN])
 	{
 		if (!LimitePantalla(nave->GetNaveObjeto(), BORDE_INFERIOR))
 			nave->MoverAbajo(nivel[nivelActual].Nave_Velocidad);
 	}
 
-	if (keys[SDLK_LEFT])
+	if (keys[SDL_SCANCODE_LEFT])
 	{
 		if (!LimitePantalla(nave->GetNaveObjeto(), BORDE_IZQUIERDO))
 			nave->MoverIzquierda(nivel[nivelActual].Nave_Velocidad);
 	}
-	if (keys[SDLK_RIGHT])
+	if (keys[SDL_SCANCODE_RIGHT])
 	{
 		if (!LimitePantalla(nave->GetNaveObjeto(), BORDE_DERECHO))
 			nave->MoverDerecha(nivel[nivelActual].Nave_Velocidad);
 	}
 
-	if (keys[SDLK_ESCAPE])
+	if (keys[SDL_SCANCODE_ESCAPE])
 	{
 		estadoJuego = Estado::ESTADO_MENU;
 	}
-	if (keys[SDLK_SPACE])
+	if (keys[SDL_SCANCODE_SPACE])
 	{
 		nave->Disparar(nivel[nivelActual].Nave_BalasMaximas);
 	}
 	
-	if (keys[SDLK_c]){//nuestra bala / nave enemigo
+	if (keys[SDL_SCANCODE_C]){//nuestra bala / nave enemigo
 		int enemigoAEliminar = rand() % nivel[nivelActual].Enemigos_VisiblesAlMismoTiempo;
 		//enemigoArreglo[enemigoAEliminar]->simularColision(true);
 	}
 
-	if (keys[SDLK_v]){//nuestra nave / nave enemigo
+	if (keys[SDL_SCANCODE_V]){//nuestra nave / nave enemigo
 
 	}
 }
 
 void CGame::MenuActualizar()
 {
-	for (int i = MODULO_TEXTO_MENU_OPCION1, j = 0; i <= MODULO_TEXTO_MENU_OPCION2; i++, j++)
-	{
-		if (keys[SDLK_UP])
+		if (keys[SDL_SCANCODE_UP])
 		{
-			opcionSeleccionada = MODULO_TEXTO_MENU_OPCION1;
+			opcionSeleccionada = MENU_OPCION1;
 		}
 
-		if (keys[SDLK_DOWN])
+		if (keys[SDL_SCANCODE_DOWN])
 		{
-			opcionSeleccionada = MODULO_TEXTO_MENU_OPCION2;
+			opcionSeleccionada = MENU_OPCION2;
 		}
 
-		if (i == opcionSeleccionada)
-			textosObjeto->Pintar(i + 2, 320, 220 + (j * 30));
-		else
-			textosObjeto->Pintar(i, 320, 220 + (j * 30));
-
-		if (keys[SDLK_RETURN])
+		if (keys[SDL_SCANCODE_RETURN])
 		{
-			if (opcionSeleccionada == MODULO_TEXTO_MENU_OPCION1)
+			if (opcionSeleccionada == MENU_OPCION1)
 			{
 				estadoJuego = Estado::ESTADO_PRE_JUGANDO;
 			}
 
-			if (opcionSeleccionada == MODULO_TEXTO_MENU_OPCION2)
+			if (opcionSeleccionada == MENU_OPCION2)
 			{
 				estadoJuego = Estado::ESTADO_FINALIZANDO;
 			}
-		}// sdlk_return 
-	}//for 
+		}// SDL_SCANCODE__return 
 }
 
 void CGame::MenuPintar()
 {
-	menuFondo->Pintar();
-	textosObjeto->Pintar(MODULO_TEXTO_TITULO, 150, 0);
-	textosObjeto->Pintar(MODULO_TEXTO_NOMBRE, 620, 570);
-	textosObjeto->Pintar(MODULO_TEXTO_MENU_OPCION1, 320, 220);
-	textosObjeto->Pintar(MODULO_TEXTO_MENU_OPCION2, 320, 250);
+	menuFondo->Draw();
+	textoTitulo->TranslateXYDraw(WIDTH_SCREEN / 8, 0);
+
+	textoNombre->TranslateXYZ( WIDTH_SCREEN / 3, 450, -2.f);//570
+//	textoNombre->ScaleXYZ(30.f,30.f,30.f);
+//	textoNombre->RotateXYZ(0.f, 0.f, 0.f);
+	textoNombre->Draw();
+
+	textoOpcion1->TranslateXYDraw(320, 220);
+	textoOpcion2->TranslateXYDraw(320, 220 + 30);
+
+	if (opcionSeleccionada == MENU_OPCION1)
+		textoOpcion1Sel->TranslateXYDraw(320, 220);
+	else
+		textoOpcion2Sel->TranslateXYDraw(320, 220 + 30);
+
 }//void	
 
 void CGame::IniciarEnemigo(){
@@ -319,13 +345,14 @@ void CGame::IniciarNave(){
 
 void CGame::TerminadoPintar(){
 	if (juegoGanado)
-		ganasteFondo->Pintar();
+		ganasteFondo->Draw();
 	else
-		perdisteFondo->Pintar();
+		perdisteFondo->Draw();
 }
 
 void CGame::TerminadoActualizar(){
-	if (keys[SDLK_RETURN]){
+	if (keys[SDL_SCANCODE_RETURN]){
 		estadoJuego = Estado::ESTADO_MENU;
 	}
 }
+

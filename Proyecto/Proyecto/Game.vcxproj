@@ -46,13 +46,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\Librerias\sdl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\Librerias\sdl2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USING_OPENGL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\Librerias\sdl\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\Librerias\sdl2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,7 +73,7 @@
     <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\Nave.cpp" />
-    <ClCompile Include="..\Source\Objeto.cpp" />
+    <ClCompile Include="..\Source\OpegGLImplement.cpp" />
     <ClCompile Include="..\Source\Sprite.cpp" />
     <ClCompile Include="..\Source\SpriteDef.cpp" />
     <ClCompile Include="..\Source\Stage.cpp" />
@@ -81,10 +82,27 @@
     <ClInclude Include="..\Source\Config.h" />
     <ClInclude Include="..\Source\Game.h" />
     <ClInclude Include="..\Source\Nave.h" />
-    <ClInclude Include="..\Source\Objeto.h" />
+    <ClInclude Include="..\Source\OpegGLImplement.h" />
     <ClInclude Include="..\Source\Sprite.h" />
     <ClInclude Include="..\Source\SpriteDeF.h" />
     <ClInclude Include="..\Source\Stage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Ejecutable\balas.dat" />
+    <None Include="..\Ejecutable\enemigo.dat" />
+    <None Include="..\Ejecutable\fragment.glsl" />
+    <None Include="..\Ejecutable\Ganaste.dat" />
+    <None Include="..\Ejecutable\Jugando.dat" />
+    <None Include="..\Ejecutable\Menu.dat" />
+    <None Include="..\Ejecutable\minave.dat" />
+    <None Include="..\Ejecutable\Perdiste.dat" />
+    <None Include="..\Ejecutable\Texto_Nombre.dat" />
+    <None Include="..\Ejecutable\Texto_Opcion1.dat" />
+    <None Include="..\Ejecutable\Texto_Opcion1Sel.dat" />
+    <None Include="..\Ejecutable\Texto_Opcion2.dat" />
+    <None Include="..\Ejecutable\Texto_Opcion2Sel.dat" />
+    <None Include="..\Ejecutable\Texto_Titulo.dat" />
+    <None Include="..\Ejecutable\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

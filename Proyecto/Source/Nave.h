@@ -1,11 +1,13 @@
 #ifndef __NAVE_H__
 #define __NAVE_H__
-#include "Objeto.h"
+#include "Sprite.h"
 #include "Config.h"
+#include "SDL_opengl.h"
+
 class Nave
 {
-	Objeto * nave;
-	Objeto * bala[MAXIMO_DE_BALAS];
+	Sprite * nave;
+	Sprite * bala[MAXIMO_DE_BALAS];
 	int balaVisible;
 	bool visible;
 	bool colision;
@@ -16,7 +18,7 @@ public:
 		BALA,
 	};
 
-	Nave(SDL_Surface*screen, char*rutaImagen, int x, int y, int module, int tipoNave);
+	Nave(OpenGlImplement* openGlImplement, char*rutaImagen, int x, int y, int tipoNave);
 	void Pintar();
 	void Disparar(int balas);
 	void AutoDisparar(int balas);
@@ -24,9 +26,13 @@ public:
 	void MoverAbajo(int velocidad);
 	void MoverIzquierda(int velocidad);
 	void MoverDerecha(int velocidad);
-	Objeto* GetNaveObjeto();
+	Sprite* GetNaveObjeto();
 	void setVisible(bool visible);
 	bool Colision(Nave * nave, TipoColision tipoColision);
 	void crearNuevo(int pos);
+	//////////// OPENGL
+	GLuint GetTexture();
+
+	///////////////////
 };
 #endif

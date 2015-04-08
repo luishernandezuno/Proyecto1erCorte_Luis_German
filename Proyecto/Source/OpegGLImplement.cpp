@@ -32,11 +32,16 @@ void OpenGlImplement::InitGL()
 	glIsProgram = (PFNGLISPROGRAMPROC)SDL_GL_GetProcAddress("glIsProgram");
 	glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)SDL_GL_GetProcAddress("glVertexAttribPointer");
 	glActiveTexture = (PFNGLACTIVETEXTUREPROC)SDL_GL_GetProcAddress("glActiveTexture");
-	glUniform1i = (PFNGLUNIFORM1IPROC)SDL_GL_GetProcAddress("glActiveTexture");
+	glUniform1i = (PFNGLUNIFORM1IPROC)SDL_GL_GetProcAddress("glUniform1i");
 }
 
 void OpenGlImplement::InitShaders()
 {
+	char message [200];
+	strcpy (message, (char *)glGetString(GL_VERSION));
+	strcat (message, "\n\nEs necesario tener la versinn 3.2 para que funcione adecuadamente.\nSi no es tu caso, actualiza tus Driver de video.\nPrecione ENTER para continuar. ");
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"OpenGL Version: ",	(const char *)message,NULL);
+	
 	//Success flag
 	bool success = true;
 

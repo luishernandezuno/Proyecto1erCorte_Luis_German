@@ -2,6 +2,7 @@
 #define _CONFIG_H_
 
 #define GL_GLEXT_PROTOTYPES
+#define VERSION "0.0.2"
 
 #define WIDTH_SCREEN 640
 #define HEIGHT_SCREEN 640

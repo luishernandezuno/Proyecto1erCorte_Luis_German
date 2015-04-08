@@ -13,18 +13,20 @@ CGame::CGame(){
 
 void CGame::IniciandoVideo()
 {
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
+	
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Video Init: ", (const char *)SDL_GetError(), NULL);
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to initialize SDL: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	
-	window = SDL_CreateWindow("TITULO", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH_SCREEN, HEIGHT_SCREEN, SDL_WINDOW_OPENGL);
-
+	window = SDL_CreateWindow(VERSION, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH_SCREEN, HEIGHT_SCREEN, SDL_WINDOW_OPENGL);
+	
 	if (!window) {
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Windows OpenGL Init: ", (const char *)SDL_GetError(), NULL);
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create OpenGL window: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(2);
@@ -33,6 +35,7 @@ void CGame::IniciandoVideo()
 	gContext = SDL_GL_CreateContext(window);
 
 	if (!gContext) {
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL Context Init: ", (const char *)SDL_GetError(), NULL);
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create OpenGL context: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(2);
@@ -319,7 +322,7 @@ void CGame::MenuPintar()
 	menuFondo->Draw();
 	textoTitulo->TranslateXYDraw(WIDTH_SCREEN / 8, 0);
 
-	textoNombre->TranslateXYZ( WIDTH_SCREEN / 3, 450, -2.f);//570
+	textoNombre->TranslateXYZ( WIDTH_SCREEN / 3, 450, 0.f);//570
 //	textoNombre->ScaleXYZ(30.f,30.f,30.f);
 //	textoNombre->RotateXYZ(0.f, 0.f, 0.f);
 	textoNombre->Draw();

@@ -7,8 +7,6 @@
 #include "SDL_opengl.h"
 
 class Sprite{
-	int x;
-	int y;
 	int w;
 	int h;
 
@@ -42,6 +40,7 @@ public:
 	void Draw();
 	
 	void TranslateXYZ(GLfloat x, GLfloat y, GLfloat z);
+	void TranslateXY(GLfloat x, GLfloat y);
 	void TranslateXYDraw(GLfloat x, GLfloat y);
 	void RotateXYZ(GLfloat x, GLfloat y, GLfloat z);
 	void ScaleXYZ(GLfloat x, GLfloat y, GLfloat z);
@@ -64,9 +63,6 @@ public:
 	int GetX();
 	int GetW();
 	int GetH();
-	void SetXY(int x, int y);
-	void SetX(int x);
-	void SetY(int y);
 
 	/////////// OPENGL
 	// Model Structure
@@ -91,11 +87,11 @@ public:
 	GLuint* textureBufferObject;
 	GLuint* textureObject;
 
-	GLfloat* vextexPositions; 
+	GLfloat* vertexPositions; 
 	GLfloat* vertexTextures; 
-	GLuint* vextexIndex;
+	GLuint* vertexIndex;
 
-	GLfloat* vextexNormals;  
+	GLfloat* vertexNormals;  
 	GLuint faces[][9];              // PTN PTN PTN
 
 	//////////////////

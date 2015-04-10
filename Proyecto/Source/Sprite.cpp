@@ -30,7 +30,7 @@ void Sprite::CreateTextures(char* name){
 		exit(3);
 	}
 
-	textureObject[0] = openGlImplement->LoadTexture(imagen, vextexPositions[0], vextexPositions[1], vextexPositions[0], vextexPositions[1]);
+	textureObject[0] = openGlImplement->LoadTexture(imagen, vertexPositions[0], vertexPositions[1], vertexPositions[0], vertexPositions[1]);
 
 	SDL_FreeSurface(imagen);
 }
@@ -62,18 +62,16 @@ void Sprite::CreateTextures(char* name){
 
 		Model model = GetOBJinfo(pathDat);
 		numero_vertices = model.positions;
-		vextexPositions = new GLfloat[model.positions * 3];
+		vertexPositions = new GLfloat[model.positions * 3];
 		vertexTextures = new GLfloat[model.texels * 2];
-		vextexIndex = new GLuint[model.positions];
-		vextexNormals = new GLfloat[model.texels * 3];
+		vertexIndex = new GLuint[model.positions];
+		vertexNormals = new GLfloat[model.texels * 3];
 		
 		ExtractOBJdata(pathDat, model.positions);
 		CreateTextures(pathImg);
 
-		w = WidthModule(0);
-		h = HeightModule(0);
-		this->x = x;
-		this->y = y;
+		w = -openGlImplement->ConvertCOORDInvf(vertexPositions[1]);
+		h = -openGlImplement->ConvertCOORDInvf(vertexPositions[10]);
 		automovimiento = false;
 		pasoActual = 0;
 		pasoLimite = -1;
@@ -81,8 +79,8 @@ void Sprite::CreateTextures(char* name){
 		rotate_x = 0.f;
 		rotate_y = 0.f;
 		rotate_z = 0.f;
-		translate_x = 0.f;
-		translate_y = 0.f;
+		translate_x = x;
+		translate_y = y;
 		translate_z = 0.f;
 		scale_x = 1.f;
 		scale_y = 1.f;
@@ -90,7 +88,7 @@ void Sprite::CreateTextures(char* name){
 
 		faces[model.faces][9];
 
-		openGlImplement->InitBuffers(vertexBufferObject, indexBufferObject, textureBufferObject, vextexPositions, 3 * model.positions * sizeof(vextexPositions), vextexIndex, model.positions * sizeof(GLuint), vertexTextures, 2 * model.texels * sizeof(vertexTextures));
+		openGlImplement->InitBuffers(vertexBufferObject, indexBufferObject, textureBufferObject, vertexPositions, 3 * model.positions * sizeof(vertexPositions), vertexIndex, model.positions * sizeof(GLuint), vertexTextures, 2 * model.texels * sizeof(vertexTextures));
 	}
 
 	void Sprite::SetAutoMovimiento(bool automovimiento)
@@ -123,6 +121,11 @@ void Sprite::CreateTextures(char* name){
 		translate_z = z;
 	}
 
+	void Sprite::TranslateXY(GLfloat x, GLfloat y){
+		translate_x = x;
+		translate_y = y;
+	}
+
 	void Sprite::TranslateXYDraw(GLfloat x, GLfloat y){
 		translate_x = x;
 		translate_y = y;
@@ -146,22 +149,21 @@ void Sprite::CreateTextures(char* name){
 	}
 
 	void Sprite::MoverLados(int posicion){
-		x += posicion;
+		translate_x += posicion;
 	}
 
 	void Sprite::MoverArribaAbajo(int posicion)
 	{
-		y += posicion;
+		translate_y += posicion;
 	}
 
 
 	int Sprite::GetX(){
-		return x;
+		return translate_x;
 	}
 
 	int Sprite::GetY(){
-		return y;
-
+		return translate_y;
 	}
 
 	int Sprite::GetW()
@@ -186,19 +188,6 @@ void Sprite::CreateTextures(char* name){
 	void Sprite::IncrementarPasoActual()
 	{
 		pasoActual++;
-	}
-
-	void Sprite::SetXY(int x, int y){
-		SetX(x);
-		SetY(y);
-	}
-
-	void Sprite::SetX(int x){
-		this->x = x;
-	}
-
-	void Sprite::SetY(int y){
-		this->y = y;
 	}
 
 	Sprite::Model Sprite::GetOBJinfo(std::string fp)
@@ -275,7 +264,7 @@ void Sprite::CreateTextures(char* name){
 				// Extract tokens
 				strtok(l, " ");
 				for (int i = 0; i < 3; i++)
-					vextexPositions[(p * 3) + i] = openGlImplement->ConvertCOORDf(atoi(strtok(NULL, " ")));
+					vertexPositions[(p * 3) + i] = openGlImplement->ConvertCOORDf(atoi(strtok(NULL, " ")));
 
 				// Wrap up
 				delete[] l;
@@ -308,7 +297,7 @@ void Sprite::CreateTextures(char* name){
 				// Extract tokens
 				strtok(l, " ");
 				for (int i = 0; i < indexes; i++)
-					vextexIndex[(in * 1) + i] = atoi(strtok(NULL, " "));
+					vertexIndex[(in * 1) + i] = atoi(strtok(NULL, " "));
 				
 				// Wrap up
 				delete[] l;

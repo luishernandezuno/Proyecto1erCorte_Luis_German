@@ -19,7 +19,7 @@ public:
 	};
 
 	Nave(OpenGlImplement* openGlImplement, char*rutaImagen, int x, int y, int tipoNave);
-	void Pintar();
+	void Draw();
 	void Disparar(int balas);
 	void AutoDisparar(int balas);
 	void MoverArriba(int velocidad);

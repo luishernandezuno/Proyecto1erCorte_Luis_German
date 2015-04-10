@@ -140,6 +140,10 @@ GLfloat OpenGlImplement::ConvertCOORDf(GLfloat x){
 	return ((GLfloat)x * 2.0f) / (GLfloat)WIDTH_SCREEN;
 }
 
+GLfloat OpenGlImplement::ConvertCOORDInvf(GLfloat x){
+	return ((GLfloat)x / 2.0f) * (GLfloat)WIDTH_SCREEN;
+}
+
 /* The main drawing function. */
 void  OpenGlImplement::Draw(GLuint* vertexBufferObject, GLuint* indexBufferObject, GLuint* textureBufferObject, GLuint textureObject, GLfloat translate_x, GLfloat translate_y, GLfloat translate_z, GLfloat rotate_x, GLfloat rotate_y, GLfloat rotate_z, GLfloat scale_x, GLfloat scale_y, GLfloat scale_z, GLuint size)
 {

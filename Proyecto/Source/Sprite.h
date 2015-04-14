@@ -16,7 +16,6 @@ class Sprite{
 	bool isVisible;
 	bool automovimiento;
 	
-	SDL_Surface * imagen;//La imagen a manipular
 	SpriteDef spriteDef;//definiciones de sprite
 
 public:

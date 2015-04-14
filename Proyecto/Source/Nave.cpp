@@ -2,6 +2,11 @@
 #include "Config.h"
 #include <stdlib.h>
 
+Nave::~Nave(){
+	delete nave;
+	delete [] bala;
+}
+
 Nave::Nave(OpenGlImplement* openGlImplement, char*rutaImagen, int x, int y, int tipoNave)
 {
 	nave = new Sprite(openGlImplement, rutaImagen, x, y);

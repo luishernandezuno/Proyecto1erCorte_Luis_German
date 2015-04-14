@@ -17,11 +17,20 @@ Sprite::Sprite(OpenGlImplement *openGlImplement){
 
 Sprite::~Sprite()
 {
-	SDL_FreeSurface(imagen);
+	delete [] vertexBufferObject;
+	delete[] indexBufferObject;
+	delete[] textureBufferObject;
+	delete[] textureObject;
+
+	delete[] vertexPositions;
+	delete[] vertexTextures;
+	delete[] vertexIndex;
+
+	delete[] vertexNormals;
 }
 
 void Sprite::CreateTextures(char* name){
-	imagen = SDL_LoadBMP(name);
+	SDL_Surface * imagen = SDL_LoadBMP(name);
 
 	if (!imagen)
 	{

@@ -195,7 +195,6 @@ OpenGlImplement::~OpenGlImplement(){
 	glDeleteProgram(shaderProgram);
 	SDL_DestroyWindow(window);
 	window = NULL;
-	SDL_Quit();
 }
 
 std::string OpenGlImplement::readFile(const char *filePath) {

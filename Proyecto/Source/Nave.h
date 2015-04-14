@@ -19,6 +19,7 @@ public:
 	};
 
 	Nave(OpenGlImplement* openGlImplement, char*rutaImagen, int x, int y, int tipoNave);
+	~Nave();
 	void Draw();
 	void Disparar(int balas);
 	void AutoDisparar(int balas);

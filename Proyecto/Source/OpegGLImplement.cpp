@@ -37,10 +37,11 @@ void OpenGlImplement::InitGL()
 
 void OpenGlImplement::InitShaders()
 {
-	char message [200];
-	strcpy (message, (char *)glGetString(GL_VERSION));
-	strcat (message, "\n\nEs necesario tener la versinn 3.2 para que funcione adecuadamente.\nSi no es tu caso, actualiza tus Driver de video.\nPrecione ENTER para continuar. ");
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"OpenGL Version: ",	(const char *)message,NULL);
+	/////CHECK VERSION OF OPENGL/////
+	//char message [200];
+	//strcpy (message, (char *)glGetString(GL_VERSION));
+	//strcat (message, "\n\nEs necesario tener la versinn 3.2 para que funcione adecuadamente.\nSi no es tu caso, actualiza tus Driver de video.\nPrecione ENTER para continuar. ");
+	//SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"OpenGL Version: ",	(const char *)message,NULL);
 	
 	//Success flag
 	bool success = true;

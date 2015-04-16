@@ -26,6 +26,15 @@ public:
 
 
 private:
+
+	GLint translate_nave_x;
+    GLint translate_nave_y;
+    GLfloat translate_nave_z;
+	GLfloat rotate_nave_x;
+	GLfloat rotate_nave_y;
+	GLfloat rotate_nave_z;
+
+	//////////////
 	void CargandoObjetos();
 	void IniciandoVideo();
 	void MoverEnemigo();

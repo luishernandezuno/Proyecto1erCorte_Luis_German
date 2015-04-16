@@ -9,6 +9,14 @@ CGame::CGame(){
 	tiempoFrameInicial = CERO;
 	tick = CERO;
 	atexit(SDL_Quit);
+	//animacion
+	translate_nave_x = -800;
+	translate_nave_y = 450;
+	translate_nave_z = -5.f;
+	rotate_nave_x = -95.f;
+	rotate_nave_y = 0.f;
+	rotate_nave_z = 0.f;
+	////
 }
 
 void CGame::IniciandoVideo()
@@ -321,11 +329,36 @@ void CGame::MenuActualizar()
 void CGame::MenuPintar()
 {
 	menuFondo->Draw();
-	textoTitulo->TranslateXYDraw(WIDTH_SCREEN / 8, 0);
+	textoTitulo->TranslateXYDraw(WIDTH_SCREEN / 8, 0);//<<<<<<< .mine
+	//animacion
+	//textoNombre->TranslateXYZ( WIDTH_SCREEN / 3, 450, -2.f);//570
+	textoNombre->TranslateXYZ(translate_nave_x, translate_nave_y, translate_nave_z);//570
+	translate_nave_x += 8;
 
-	textoNombre->TranslateXY( WIDTH_SCREEN / 3, 450);//570
+	if (translate_nave_x > 1800){
+		translate_nave_x = -800;
+		translate_nave_y = 450;
+		translate_nave_z = -5.f;
+		rotate_nave_x = -95.f;
+		rotate_nave_y = 0.f;
+		rotate_nave_z = 0.f;
+	}
+
+	if (translate_nave_x > 450){
+		translate_nave_y++;
+		translate_nave_z += 0.05f;
+		rotate_nave_x += 1.f;
+	}
+
+	if (translate_nave_x > 650){
+		rotate_nave_y += 1.f;
+		rotate_nave_z += 1.f;
+	}
+	textoNombre->ScaleXYZ(100.f,100.f,100.f);
+    textoNombre->RotateXYZ(rotate_nave_x, rotate_nave_y, rotate_nave_z);//=======
+	//textoNombre->TranslateXY( WIDTH_SCREEN / 3, 450);//570>>>>>>> .r6
 	textoNombre->Draw();
-
+	//
 	textoOpcion1->TranslateXYDraw(320, 220);
 	textoOpcion2->TranslateXYDraw(320, 220 + 30);
 
@@ -357,4 +390,5 @@ void CGame::TerminadoActualizar(){
 		estadoJuego = Estado::ESTADO_MENU;
 	}
 }
+
 

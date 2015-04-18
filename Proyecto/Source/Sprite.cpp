@@ -135,6 +135,10 @@ void Sprite::CreateTextures(char* name){
 		translate_y = y;
 	}
 
+	void Sprite::TranslateZ(GLfloat z){
+		translate_z = z;
+	}
+
 	void Sprite::TranslateXYDraw(GLfloat x, GLfloat y){
 		translate_x = x;
 		translate_y = y;
@@ -273,7 +277,7 @@ void Sprite::CreateTextures(char* name){
 				// Extract tokens
 				strtok(l, " ");
 				for (int i = 0; i < 3; i++)
-					vertexPositions[(p * 3) + i] = openGlImplement->ConvertCOORDf(atoi(strtok(NULL, " ")));
+					vertexPositions[(p * 3) + i] = openGlImplement->ConvertCOORDf(atof(strtok(NULL, " ")));
 
 				// Wrap up
 				delete[] l;

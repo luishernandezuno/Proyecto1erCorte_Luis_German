@@ -62,10 +62,17 @@ void Nave::Disparar(int balas)
 
 void Nave::Draw()
 {
+	
 	if (visible){
+
+		nave->ScaleXYZ(20.f, 20.f, 20.f);
 		nave->Draw();
+		
+
 		for (int i = 0; i < MAXIMO_DE_BALAS; i++)
 		{
+		bala[i]->ScaleXYZ(180.f, 180.f, 180.f);
+		
 			bala[i]->Draw();
 			switch (tipoNave)
 			{
@@ -104,7 +111,7 @@ Sprite*Nave::GetNaveObjeto()
 
 void Nave::AutoDisparar(int balas)
 {
-	if ((rand()%100)<2)
+	if ((rand() % 100)<2)
 	{
 		Disparar(balas);
 	}
@@ -118,14 +125,14 @@ void Nave::setVisible(bool visible)
 bool Nave::Colision(Nave * nave, TipoColision tipoColision){
 	int x_o, y_o, w_o, h_o;
 	int x, y, w, h;
-	
+
 	switch (tipoColision){
 	case TipoColision::NAVE:
 		x = GetNaveObjeto()->GetX();
 		y = GetNaveObjeto()->GetY();
 		w = GetNaveObjeto()->GetW();
 		h = GetNaveObjeto()->GetH();
-		
+
 		x_o = nave->GetNaveObjeto()->GetX();
 		y_o = nave->GetNaveObjeto()->GetY();
 		w_o = nave->GetNaveObjeto()->GetW();

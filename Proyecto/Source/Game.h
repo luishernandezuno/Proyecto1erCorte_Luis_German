@@ -14,7 +14,7 @@ public:
 
 	CGame();
 	void Finalize();
-	
+
 	enum Estado{
 		ESTADO_INICIANDO,
 		ESTADO_MENU,
@@ -28,8 +28,8 @@ public:
 private:
 
 	GLint translate_nave_x;
-    GLint translate_nave_y;
-    GLfloat translate_nave_z;
+	GLint translate_nave_y;
+	GLfloat translate_nave_z;
 	GLfloat rotate_nave_x;
 	GLfloat rotate_nave_y;
 	GLfloat rotate_nave_z;
@@ -48,11 +48,11 @@ private:
 	void InicializandoStage();
 	void IniciarEnemigo();
 	void IniciarNave();
-	
+
 	Uint8 *keys;//Esta variable nos servira para ver si determinadas teclas estan o no pulsadas
 	SDL_Event event;//La variable event de tipo evento de SDL nos servira para motorizar
 	SDL_Surface *screenBuffer;
-	
+
 	///////// NUEVO
 	SDL_Window *window;
 	SDL_GLContext gContext;
@@ -69,9 +69,9 @@ private:
 	Nave *nave;
 	Nave *enemigoArreglo[MAXIMO_DE_ENEMIGOS];
 	Stage nivel[MAXIMO_DE_NIVELES];
-	
+
 	Estado estadoJuego;
-	
+
 	int tick;
 	int tiempoFrameInicial;
 	int tiempoFrameFinal;
@@ -84,6 +84,7 @@ private:
 	Sprite *textoOpcion1Sel;//Textos del juego
 	Sprite *textoOpcion2Sel;//Textos del juego
 	Sprite *jugandoFondo;//Fondo del juego
+	Sprite *jugandoFondo2;//Fondo del juego2
 	Sprite *ganasteFondo;//Fondo cuando ganas
 	Sprite *perdisteFondo;//Fondo cuando ganas
 

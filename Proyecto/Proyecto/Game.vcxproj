@@ -93,6 +93,7 @@
     <None Include="..\Ejecutable\fragment.glsl" />
     <None Include="..\Ejecutable\Ganaste.dat" />
     <None Include="..\Ejecutable\Jugando.dat" />
+    <None Include="..\Ejecutable\Jugando2.dat" />
     <None Include="..\Ejecutable\Menu.dat" />
     <None Include="..\Ejecutable\minave.dat" />
     <None Include="..\Ejecutable\Perdiste.dat" />

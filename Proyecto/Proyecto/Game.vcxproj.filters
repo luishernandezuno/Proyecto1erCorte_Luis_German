@@ -109,5 +109,8 @@
     <None Include="..\Ejecutable\Texto_Titulo.dat">
       <Filter>Data</Filter>
     </None>
+    <None Include="..\Ejecutable\Jugando2.dat">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
 </Project>

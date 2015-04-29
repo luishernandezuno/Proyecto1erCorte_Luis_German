@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(364,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Game.cpp
+c:\users\luis hernandez\documents\proyecto1ercorte_luis_german\trunk\proyecto\source\sprite.h(95): warning C4200: se ha utilizado una extensión no estándar : matriz de tamaño cero en struct/union
+          No se puede generar el constructor de copias o el operador de asignación de copias cuando el tipo definido por el usuario contiene una matriz de tamaño cero
+c:\users\luis hernandez\documents\proyecto1ercorte_luis_german\trunk\proyecto\source\game.cpp(231): warning C4244: 'argumento' : conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+main.obj : warning LNK4075: se omite '/EDITANDCONTINUE' debido a la especificación '/OPT:LBR'
+MSVCRTD.lib(cinitexe.obj) : warning LNK4098: la biblioteca predeterminada'msvcrt.lib' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+  Game.vcxproj -> C:\Users\LUIS HERNANDEZ\Documents\Proyecto1erCorte_Luis_German\trunk\Proyecto\Proyecto\..\Ejecutable\Game.exe
